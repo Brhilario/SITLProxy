@@ -1,16 +1,20 @@
 #Relação sinal ruído SNR
 def calcularSNR(pr,ruido):
     import math
-    if pr > ruido: 
-    	return abs(pr-ruido)
-    else: 
-    	return 0	 	
+    return pr - ruido
+    #if pr > ruido: 
+    #	return abs(pr-ruido)
+    #else: 
+    #	return 0	 	
 
 #taxa de erro do bit    
 def getBpskBer(snr):
     import math
-    snr = snr ** 0.5 #math.sqrt(snr)
-    ber = 0.5 * math.erfc(snr)
+    if snr > 0:
+    	snr = snr ** 0.5 #math.sqrt(snr)
+    	ber = 0.5 * math.erfc(snr)
+    else:
+    	ber = 1	
     return ber
 
 #probabilidade de perda do pacote

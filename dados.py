@@ -6,6 +6,6 @@ def criarArquivo(nome, pr, snr, ber, per, angulo, distancia, tempo, latitude, lo
 		
 		writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
 
-		writer.writerow({"PR": pr, "SNR":snr, "BER":ber, "PER":per, "ANGULO":angulo, "DISTANCIA":distancia, "TEMPO":tempo, "LATITUDE":latitude, "LONGITUDE":longitude})
+		writer.writerow({"PR": pr[:3], "SNR":snr[:2], "BER":ber, "PER":per[:2], "ANGULO":angulo, "DISTANCIA":distancia, "TEMPO":tempo[:7], "LATITUDE":latitude[:10], "LONGITUDE":longitude[:10]})
 		
 

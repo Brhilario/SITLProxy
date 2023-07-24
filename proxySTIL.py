@@ -90,6 +90,7 @@ while 1:
                         if fds is clientsock:
 
                                 data = clientsock.recv(1024)
+                                print('tipo data',type(data))
                                 i = 1
                                 posicao = 0
 
@@ -97,8 +98,12 @@ while 1:
                                 
                                 bytestring = format(int(datahex, 16), "b")
                                 info = [bytestring[i:i+8] for i in range(0,len(bytestring),8)]
+                                aleatorio = 0
                                 aleatorio = random.random()
-                                if aleatorio > per:
+                                print('CLIENTE SOCKETS', VaErro)
+                                print('PER CLIENTE SOCKETS', per)
+                                if VaErro == 1:
+                                #if aleatorio > per:
                                 	tcpD.send(data)
 
                         else:
@@ -189,28 +194,39 @@ while 1:
                                								modelo = 'los'
                                						
                                								frees = modelos.frees(distanciaTotal, comprimentoOnda, potenciaAnt, ganhoAntena)
+                               								print('friis: ', frees)
                                					
                                								los = modelos.Plos(distanciaTotal, alturaRelativa)
+                               								print('los sem friss: ', los)
                                								pr = frees-los
                                							if modeloProgacao == 4:
                                								modelo = 'olos'
                                						
                                								frees = modelos.frees(distanciaTotal, comprimentoOnda, potenciaAnt, ganhoAntena)
+                               								print('friis: ', frees)
                                								if alturaRelativa > 0:
                                									angulo = mat.degrees(mat.asin(alturaRelativa/distanciaTotal))
+                               									olos = modelos.POlos(angulo, alfa0, alfa1, beta)
                                								else:
-                               									angulo = 0	
+                               									angulo = 0
+                               									olos = 0	
                                								print('angulo',angulo)
-                               								olos = modelos.POlos(angulo, alfa0, alfa1, beta)
-                               								pr = frees-olos	
+                               								#olos = modelos.POlos(angulo, alfa0, alfa1, beta)
+                               								print('olos sem friis: ', olos)
+                               								pr = frees-olos
+                               								print('friis-olos: ', pr)	
                                						
                                							print('*******'+modelo+'****')
+                               							
                                							print(modelo, pr)
                                							snr = perda.calcularSNR(pr,ruido)
+                               							
                                							print('AQUI AQUI PR', pr)
                                							print('SNR: ', snr)
+                               							ber = 0.0
                                							ber = perda.getBpskBer(snr)
                                							print('ber: ', np.format_float_scientific(ber, precision = 1, exp_digits=3))
+                               							per = 0.0
                                							per = perda.calcularPer(len(info), ber)
                                							print('per: ', np.format_float_scientific(per, precision = 1, exp_digits=3))
                                							print('@@@@@@@@', distanciaTotalInt)
@@ -222,15 +238,13 @@ while 1:
                                								starts = datetime.datetime.now()
                                								startTime = 1
                                							time = datetime.datetime.now() - starts	
-                               							dados.criarArquivo(modelo, str(pr), str(snr), str(ber), str(per), '0', str(distanciaTotal), str(time), str(drone.latitude), str(drone.longitude))
+                               							dados.criarArquivo(modelo, str(pr), str(snr), str(distancia), str(per), '0', str(len(info)), str(time), str(drone.latitude), str(drone.longitude))
                                							distanciaArquivo = distanciaArquivo+10
                                						
 
                                				
-                               #termina				
-                               				
-                               				
-
+                               #termina
+                                aleatorio = 0
                                 aleatorio = random.random()
                                 #clientsock.send(data)
                                 if startTime == 1:
@@ -238,12 +252,17 @@ while 1:
                                 else: time1 = 0	
                                 	#dados.criarArquivo('erro', modelo, str(snr), str(ber), str(per), '1', str(distanciaTotal), str(time1))
                                 if aleatorio > per:
+                                	VaErro = 1
                                 	if modelo != '':
-                                		dados.criarArquivo('erro', modelo, str(snr), str(ber), str(per), '1', str(distanciaTotal), str(time1), str(drone.latitude), str(drone.longitude))
+                                		if distanciaTotal > 1:
+                                			dados.criarArquivo('erro', modelo, str(snr), str(ber), str(per), '1', str(distanciaTotal), str(time1), str(drone.latitude), str(drone.longitude))
                                 	clientsock.send(data)
+                                	
                                 else:
                                 	time1 = datetime.datetime.now() - starts
-                                	dados.criarArquivo('erro', modelo, str(snr), str(ber), str(per), '0', str(distanciaTotal), str(time1), str(drone.latitude), str(drone.longitude))
+                                	VaErro = 0
+                                	if distanciaTotal > 1:
+                                		dados.criarArquivo('erro', modelo, str(snr), str(ber), str(per), '0', str(distanciaTotal), str(time1), str(drone.latitude), str(drone.longitude))
                                              
                 
 

@@ -20,10 +20,16 @@ def Plos(distancia, altura):
 def logDistance(distanciaTotal, potenciaAnt, expoentePerda, distanciaRef, potenciaRef):
     if distanciaTotal <= distanciaRef:
     	return potenciaAnt - potenciaRef
+    pr =  (4 * 3.14159 * distanciaRef)
+    pr = 0.12248 / pr
+    pr = 20 * (mat.log10(pr))
+    pr = pr + potenciaAnt + 2 + 2    	
+    	
     pathLossDb = distanciaTotal / distanciaRef	
-    pathLossDb = 10 * expoentePerda * (mat.log10(pathLossDb)) 
-    rxc = - potenciaRef - pathLossDb    		
-    return potenciaAnt + rxc
+    pathLossDb = 10 * expoentePerda * (mat.log10(pathLossDb))
+    return  pr + pathLossDb
+    #rxc = - potenciaRef - pathLossDb    		
+    #return potenciaAnt + rxc
     
 
 #free space
@@ -31,5 +37,5 @@ def frees(distanciaTotal, comprimentoOnda, potenciaAnt, ganhoAntena):
     pr =  (4 * 3.14159 * distanciaTotal)
     pr = comprimentoOnda / pr
     pr = 20 * (mat.log10(pr))
-    pr = pr + potenciaAnt + ganhoAntena + ganhoAntena
+    pr = pr + (potenciaAnt + ganhoAntena + ganhoAntena)
     return pr
